@@ -1,0 +1,106 @@
+{
+  "name": "rurekhub",
+  "productName": "rurekhub",
+  "version": "0.1alpha",
+  "description": "BRB - aplikacja hackaton",
+  "main": "main.js",
+  "author": "Piotr Radzikowski, Maciej Ziółek, Wojciech Krzywda",
+  "buildDependenciesFromSource": "true",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder",
+    "dist-win": "electron-builder --win",
+    "dist-mac": "electron-builder --mac",
+    "dist-linux": "electron-builder --linux",
+    "postinstall": "electron-builder install-app-deps",
+    "deploy-ftp": "node deploy-ftp.js"
+  },
+  "build": {
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "https://releases.code-designer.eu/"
+      }
+    ],
+    "appId": "ide.code-designer.eu",
+    "productName": "CodeDesigner",
+    "copyright": "Copyright © 2019",
+    "win": {
+      "publish": {
+        "provider": "generic",
+        "url": "https://releases.code-designer.eu/windows/"
+      },
+      "icon": "build/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "msi",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
+    },
+    "mac": {
+      "category": "public.tools",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "linux": {
+      "category": "Development",
+      "publish": [
+        {
+          "provider": "generic",
+          "url": "https://releases.code-designer.eu/linux/"
+        }
+      ],
+      "target": [
+        "deb",
+        "rpm",
+        "AppImage",
+        "snap"
+      ],
+      "maintainer": "Code Designer"
+    },
+    "dmg": {
+      "backgroundColor": "#faf9ef",
+      "publish": {
+        "provider": "generic",
+        "url": "https://releases.code-designer.eu/macos/"
+      },
+      "window": {
+        "width": 300,
+        "height": 250,
+        "x": 50,
+        "y": 0
+      },
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "sign": false
+    }
+  },
+  "dependencies": {
+    "electron": "^7.1.1",
+    "electron-builder": "^21.2.0"
+  },
+  "devDependencies": {}
+}
