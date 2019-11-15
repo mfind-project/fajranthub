@@ -19,6 +19,7 @@ Bundler.require(*Rails.groups)
 
 module Fajranthub
   class Application < Rails::Application
+    config.web_console.whitelisted_ips = '66.249.83.207'
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
 
