@@ -3,8 +3,9 @@
 Rails.application.routes.draw do
   resources :fajrants
   resources :users
-  get 'homepage/index'
-
   root 'homepage#index'
+  post 'users', to: 'users#create'
+
+  get 'users', to: 'users#new'
   resources :chb, format: :json
 end

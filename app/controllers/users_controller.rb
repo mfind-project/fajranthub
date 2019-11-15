@@ -2,16 +2,28 @@
 
 class UsersController < ApplicationController
   def index
-    render json: user
+    # render json: user
+  end
+
+  def new
+    @user = User.new
   end
 
   def create
-    if User.exists?(email: params[:email])
-      render json: user, status: 200
+    if User.exists?(email: user_params[:email])
+      user
     else
-      user = User.create!(user_params)
-      render json: user, status: 201
+      @user = User.create!(user_params)
     end
+
+    session[:user_id] = @user.id
+    respond_to do |format|
+      format.html { redirect_to action: "show", id: @user.id }
+      format.json { render json: user, status: 201 }
+    end
+  end
+
+  def show
   end
 
   def destroy
@@ -21,10 +33,10 @@ class UsersController < ApplicationController
   private
 
   def user
-    @user ||= User.find_by!(email: params[:email])
+    @user ||= User.find_by!(email: user_params[:email])
   end
 
   def user_params
-    params.permit(:email, :google_user_id)
+    params.require(:user).permit(:email, :google_user_id)
   end
 end
