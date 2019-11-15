@@ -11,11 +11,11 @@ class FajrantsController < ApplicationController
 
   def create
     fp = fajrant_params
-    fp[:ends_at] = Time.now + params[:ends_at].to_i * 60
+    fp[:ends_at] = Time.now + params[:end_interval].to_i * 60
     if Fajrant.exists?(user_id: params[:user_id])
-      fajrant.update_attributes(fp)
+      fajrant.update_attributes(fp.except(:end_interval))
     else
-      @fajrant = Fajrant.create!(fp)
+      @fajrant = Fajrant.create!(fp.except(:end_interval))
     end
 
     render json: fajrant, status: 201
@@ -28,7 +28,7 @@ class FajrantsController < ApplicationController
   private
 
   def fajrant_params
-    params.permit(:user_id, :ends_at, :description).merge(started_at: DateTime.now)
+    params.permit(:user_id, :end_interval, :description).merge(started_at: DateTime.now)
   end
 
   def fajrant

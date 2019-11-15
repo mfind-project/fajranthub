@@ -2,21 +2,15 @@
 
 class UsersController < ApplicationController
   def index
-    respond_to do |format|
-      format.json { render json: User.all }
-    end
-  end
-
-  def show
-    respond_to do |format|
-      format.json { render json: user }
-    end
+    render json: user
   end
 
   def create
-    user = User.create!(user_params)
-    respond_to do |format|
-      format.json { render json: user, status: 201 }
+    if User.exists?(email: params[:email])
+      render json: user, status: 200
+    else
+      user = User.create!(user_params)
+      render json: user, status: 201
     end
   end
 
@@ -27,10 +21,10 @@ class UsersController < ApplicationController
   private
 
   def user
-    @user ||= User.find(params[:id])
+    @user ||= User.find_by!(email: params[:email])
   end
 
   def user_params
-    params.permit(:google_user_id, :name, :pn_user_id)
+    params.permit(:email, :google_user_id)
   end
 end
