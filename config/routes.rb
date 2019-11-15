@@ -6,5 +6,5 @@ Rails.application.routes.draw do
   get 'homepage/index'
 
   root 'homepage#index'
-  resources :chb
+  resources :chb, format: :json
 end
