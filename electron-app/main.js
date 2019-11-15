@@ -21,10 +21,28 @@ app.on('window-all-closed', () => {
   app.quit()
 })
 
+let indexIcon = 1;
+
+const iconTest = () => {
+  indexIcon ++;
+  if (indexIcon === 2 ) {
+    tray.setImage(path.join(assetsDirectory, 'icon-wait.png'))
+  } else if (indexIcon === 3 ) {
+    tray.setImage(path.join(assetsDirectory, 'rurek.png'))
+  } else {
+    indexIcon = 1;
+    tray.setImage(path.join(assetsDirectory, 'icon.png'))
+  }
+};
+
 const createTray = () => {
   tray = new Tray(path.join(assetsDirectory, 'icon.png'));
   tray.setToolTip('Rurek hub');
   const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Icontest',
+      click: iconTest
+    },
     {
       label: 'Toggle',
       click: toggleWindow
@@ -94,7 +112,7 @@ const showWindow = () => {
   const position = getWindowPosition()
   window.setPosition(position.x, position.y, false)
   window.show()
-  // window.focus()
+  window.focus()
 }
 
 ipcMain.on('show-window', () => {

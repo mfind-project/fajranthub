@@ -1,0 +1,24 @@
+name: ElectronBrb
+
+on:
+#  pull_request:
+#    branches:
+#      - master
+  push:
+    branches:
+      - electron
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+      - name: Install dependencies and Build
+        run: npm run dist
+      - uses: actions/upload-artifact@master
+        with:
+          name: ${{ matrix.platform }}
+          path: CodeDesigner/dist
+      - name: upload dist
+        run: npm run deploy-ftp -- ${{ secrets.hostpass }} ${{ matrix.platform }}
