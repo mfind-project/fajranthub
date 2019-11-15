@@ -29,7 +29,7 @@ const createTray = () => {
       label: 'Toggle',
       click: toggleWindow
     }, {
-      label: 'Zamknij',
+      label: 'Close',
       click: () => { app.quit(); }
     }
   ]);
