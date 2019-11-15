@@ -8,8 +8,9 @@ class ChbController < ApplicationController
     when 'MESSAGE'
       @response = message_response(request_body)
     when 'CARD_CLICKED'
-
+      @response = card_clicked_response(request_body)
     end
+
     render json: @response
   end
 
@@ -19,8 +20,8 @@ class ChbController < ApplicationController
     if (body[:message][:argumentText])
       minutes = body[:message][:argumentText].scan(/\d+/).first
       return { text: 'Nie rozpoznaje polecenia' } if minutes.nil?
-      # initialize(widget_text:, buttons: nil)
-      text = "<b>#{body[:user][:displayName]}</b> zapisano <font color=\"#ff0000\">#{amount}</font> przerwy"
+      # Sprawdzamy czy była przerwa, jesli nie to zapis do bazy
+      text = "<b>#{body[:user][:displayName]}</b> zapisano <font color=\"#ff0000\">#{minutes}</font> przerwy"
       ChbResponseFormatter.new(widget_text: text).call
     else
       text = 'Co chcesz zrobić?'
@@ -29,6 +30,25 @@ class ChbController < ApplicationController
         { text: 'Zakończ', action_method_name: 'finish', parameters: {}},
       ]
       ChbResponseFormatter.new(widget_text: text, buttons: buttons).call
+    end
+  end
+
+  def card_clicked_response(body)
+    case body.action.actionMethodName
+    when 'finish'
+      text = "<b>#{body[:user][:displayName]}</b> zakończona przerwa"
+      # usuwamy przerwe z bazy
+      ChbResponseFormatter.new(widget_text: text).call
+    when 'inc'
+      text = 'Za ile wracasz?'
+      buttons = [
+        { text: '10min', action_method_name: 'brb', parameters: { key: 'amount', value: '10min' }},
+        { text: '20min', action_method_name: 'brb', parameters: { key: 'amount', value: '20min' }},
+        { text: '30min', action_method_name: 'brb', parameters: { key: 'amount', value: '30min' }}
+      ]
+      ChbResponseFormatter.new(widget_text: text, buttons: buttons).call
+    # when condition
+
     end
   end
 end
