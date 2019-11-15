@@ -17,6 +17,9 @@
 # JS translations
 public/javascripts/translations.js
 
+# Electron PWD app
+/electron-app/*
+
 spec/reports
 
 # Pliki środowiska programistycznego
