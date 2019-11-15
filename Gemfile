@@ -29,7 +29,8 @@ gem 'jbuilder', '~> 2.5'
 gem 'webpush'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-
+gem 'react-rails'
+gem 'webpacker', '~> 4.x'
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 
