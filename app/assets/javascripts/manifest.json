@@ -1,0 +1,14 @@
+{
+  "manifest_version": 2,
+  "name": "Fajranthub",
+  "short_name": "fajranthub-app",
+  "version": "1.0.0",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "./fajranthub.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
