@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Tray } = require('electron')
+const { app, BrowserWindow, Menu, ipcMain, Tray } = require('electron')
 const path = require('path')
 
 const assetsDirectory = path.join(__dirname, 'assets')
@@ -22,7 +22,18 @@ app.on('window-all-closed', () => {
 })
 
 const createTray = () => {
-  tray = new Tray(path.join(assetsDirectory, 'icon.png'))
+  tray = new Tray(path.join(assetsDirectory, 'icon.png'));
+  tray.setToolTip('Rurek hub');
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Toggle',
+      click: toggleWindow
+    }, {
+      label: 'Zamknij',
+      click: () => { app.quit(); }
+    }
+  ]);
+  tray.setContextMenu(contextMenu);
   tray.on('right-click', toggleWindow)
   tray.on('double-click', toggleWindow)
   tray.on('click', function (event) {
@@ -57,7 +68,7 @@ const createWindow = () => {
     skipTaskbar: true,
     fullscreenable: false,
     resizable: false,
-    transparent: true,
+    transparent: false,
     webPreferences: {
       // Prevents renderer process code from not running when window is
       // hidden
@@ -76,23 +87,22 @@ const createWindow = () => {
 }
 
 const toggleWindow = () => {
-  if (window.isVisible()) {
-    window.hide()
-  } else {
-    showWindow()
-  }
+  window.isVisible() ? window.hide() : showWindow();
 }
 
 const showWindow = () => {
   const position = getWindowPosition()
   window.setPosition(position.x, position.y, false)
   window.show()
-  window.focus()
+  // window.focus()
 }
 
 ipcMain.on('show-window', () => {
   showWindow()
-})
+});
+
+
+
 
 ipcMain.on('weather-updated', (event, weather) => {
   // Show "feels like" temperature in tray
