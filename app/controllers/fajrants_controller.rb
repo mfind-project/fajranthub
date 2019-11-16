@@ -14,11 +14,11 @@ class FajrantsController < ApplicationController
     fp[:ends_at] = Time.now + params[:end_interval].to_i * 60
     if Fajrant.exists?(user_id: params[:user_id])
       fajrant.update_attributes(fp.except(:end_interval))
+      render json: fajrant, status: 200
     else
       @fajrant = Fajrant.create!(fp.except(:end_interval))
+      render json: fajrant, status: 201
     end
-
-    render json: fajrant, status: 201
   end
 
   def destroy

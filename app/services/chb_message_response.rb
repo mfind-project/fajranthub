@@ -10,10 +10,6 @@ class ChbMessageResponse < ChbBase
   def message_response
     if (@body[:message][:argumentText])
       return { text: 'Nie rozpoznaje polecenia' } if minutes.nil?
-      
-      # binding.pry
-      
-
       @fajrant.present? ? @fajrant.update_attributes(attributes) : Fajrant.create!(attributes)
       text = "<b>#{@body[:user][:displayName]}</b> zapisano <font color=\"#ff0000\">#{minutes}</font> przerwy"
       ChbResponseFormatter.new(widget_text: text).call
