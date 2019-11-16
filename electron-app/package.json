@@ -1,0 +1,89 @@
+{
+  "name": "rurekhub",
+  "productName": "rurekhub",
+  "version": "1.0.0",
+  "description": "BRB - aplikacja hackaton",
+  "main": "main.js",
+  "author": "Piotr Radzikowski, Maciej Ziółek, Wojciech Krzywda",
+  "buildDependenciesFromSource": "true",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder -mwl",
+    "dist-win": "electron-builder --win",
+    "dist-mac": "electron-builder --mac",
+    "dist-linux": "electron-builder --linux"
+  },
+  "build": {
+    "publish": [
+      {
+        "provider": "github"
+      }
+    ],
+    "appId": "brb.mfind.pl",
+    "productName": "Brb",
+    "copyright": "Copyright © 2019",
+    "win": {
+      "publish": [ "github" ],
+      "icon": "build/icon.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
+    },
+    "mac": {
+      "category": "public.tools",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "linux": {
+      "category": "Development",
+      "publish": [
+        {
+          "provider": "github"
+        }
+      ],
+      "target": [
+        "deb",
+        "AppImage"
+      ],
+      "maintainer": "Rurekhub"
+    },
+    "dmg": {
+      "backgroundColor": "#faf9ef",
+      "publish": {
+        "provider": "github"
+      },
+      "window": {
+        "width": 300,
+        "height": 250,
+        "x": 50,
+        "y": 0
+      },
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "sign": false
+    }
+  },
+  "dependencies": { },
+  "devDependencies": {
+    "electron": "^7.1.1",
+    "electron-builder": "^21.2.0"
+  }
+}
