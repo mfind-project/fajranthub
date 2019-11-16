@@ -1,2 +1,77 @@
 <h1>Fajranthub</h1>
-<p>hejka, tutaj bedziemy sie zapisywac do powiadomieć</p>
+
+<div class="row fajrant-row" data-id="<%= @user.id %>">
+<% if !@fajrant or @timer <= 0 %>
+  <p>Za ile wrócisz?</p>
+  <div class="col s12 m4">
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title"></span>
+        <p></p>
+      </div>
+      <div class="card-action">
+        <a class="interval-action" data-interval="10" href="#10">10min</a>
+      </div>
+    </div>
+  </div>
+  <div class="col s12 m4">
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title"></span>
+        <p></p>
+      </div>
+      <div class="card-action">
+        <a class="interval-action" data-interval="20" href="#20">20min</a>
+      </div>
+    </div>
+  </div>
+  <div class="col s12 m4">
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title"></span>
+        <p></p>
+      </div>
+      <div class="card-action">
+        <a class="interval-action" data-interval="30" href="#30">30min</a>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div id="countdown" data-timer="<%= @timer %>">
+    <div id="countdown-number"></div>
+    <svg>
+      <circle r="18" cx="20" cy="20"></circle>
+    </svg>
+  </div>
+  <br />
+  <div class="row">
+    <div class="col s12 m6">
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title"></span>
+          <p></p>
+        </div>
+        <div class="card-action">
+          <a class="delay-fajrant" href="#">Przedłuż przerwę</a>
+          <div class="delay-interval" style="display: none;">
+            <a class="interval-action" data-interval="10" href="#10">10min</a>
+            <a class="interval-action" data-interval="20" href="#20">20min</a>
+            <a class="interval-action" data-interval="30" href="#30">30min</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col s12 m6">
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title"></span>
+          <p></p>
+        </div>
+        <div class="card-action">
+          <a class="finish-fajrant" data-id="<%= @fajrant.id %>" href="#">Zakończ przerwę</a>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+</div>

@@ -2,6 +2,10 @@
 
 class UsersController < ApplicationController
   def index
+    if cookies[:user]
+      @user = User.find_by!(id: cookies[:user])
+      redirect_to action: "show", id: @user.id
+    end
     # render json: user
   end
 
@@ -16,6 +20,7 @@ class UsersController < ApplicationController
       @user = User.create!(user_params)
     end
 
+    cookies[:user] = @user.id;
     session[:user_id] = @user.id
     respond_to do |format|
       format.html { redirect_to action: "show", id: @user.id }
@@ -24,6 +29,9 @@ class UsersController < ApplicationController
   end
 
   def show
+    @user = User.find(params[:id])
+    @fajrant = Fajrant.find_by(user_id: params[:id])
+    @timer = (@fajrant) ? (@fajrant[:ends_at] - Time.now).to_i : 0;
   end
 
   def destroy

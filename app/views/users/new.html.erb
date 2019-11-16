@@ -1,6 +1,16 @@
 <h1>Fajranthub</h1>
-<%= simple_form_for @user do |f| %>
-  <%= f.input :email %>
-  <%= f.submit %>
-
-<% end %>
+<div class="row">
+  <div class="col s12">
+    <div class="row">  
+      <%= simple_form_for @user do |f| %>
+        <div class="input-field col s12 m9">
+          <%= f.input_field :email, class: "" %>
+          <%= f.label :email %>
+        </div>
+        <div class="col s12 m3">
+          <%= f.submit "Zapisz", class: "waves-effect waves-light btn-large" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
