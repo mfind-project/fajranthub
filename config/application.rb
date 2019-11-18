@@ -21,9 +21,11 @@ Bundler.require(*Rails.groups)
 
 module Fajranthub
   class Application < Rails::Application
-    config.web_console.whitelisted_ips = '66.249.83.116'
+    config.web_console.whitelisted_ips = '66.249.83.81'
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
+    config.time_zone = 'Warsaw'
+    config.active_record.default_timezone = :local # Or :utc
 
     config.room_url = 'https://chat.googleapis.com/v1/spaces/AAAARGTrIFM/messages?key=AIzaSyAqYTteD5UAE8FyazXHPydWMOxyyFa3SC4'
 

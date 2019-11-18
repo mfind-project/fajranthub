@@ -1,4 +1,5 @@
 class ChbController < ApplicationController
+  include DateParser
 
   def create
     request_body = JSON.parse(request.body.string).with_indifferent_access
@@ -17,38 +18,55 @@ class ChbController < ApplicationController
   private
 
   def message_response(body)
-    if (body[:message][:argumentText])
+    if body[:message][:argumentText]
       minutes = body[:message][:argumentText].scan(/\d+/).first
       return { text: 'Nie rozpoznaje polecenia' } if minutes.nil?
-      # Sprawdzamy czy była przerwa, jesli nie to zapis do bazy
-      text = "<b>#{body[:user][:displayName]}</b> zapisano <font color=\"#ff0000\">#{minutes}</font> przerwy"
+
+      user = UserMatcher.new(email: body[:user][:email], name: body[:user][:displayName], google_user_id: body[:user][:name]).call
+      @fajrant = FajrantHandler.new(user: user, end_interval: minutes).call
+      text = "<b>#{body[:user][:displayName]}</b> zapisano <font color=\"#ff0000\">#{minutes} minut</font> przerwy"
       ChbResponseFormatter.new(widget_text: text).call
     else
       text = 'Co chcesz zrobić?'
       buttons = [
-        { text: 'Przedłuż', action_method_name: 'inc', parameters: { key: 'amount', value: '10min' }},
-        { text: 'Zakończ', action_method_name: 'finish', parameters: {}},
+        { text: 'Rozpocznij/Przedłuż', action_method_name: 'inc', parameters: { key: 'amount', value: '10min' }},
+        { text: 'Zakończ', action_method_name: 'finish', parameters: {}}
       ]
       ChbResponseFormatter.new(widget_text: text, buttons: buttons).call
     end
   end
 
   def card_clicked_response(body)
-    case body.action.actionMethodName
+    case body[:action][:actionMethodName]
+    when 'brb'
+      minutes = body[:action][:parameters].first[:value].scan(/\d+/).first
+      user = UserMatcher.new(email: body[:user][:email], name: body[:user][:displayName], google_user_id: body[:user][:name]).call
+      @fajrant = FajrantHandler.new(user: user, end_interval: minutes).call
+      text = "<b>#{body[:user][:displayName]}</b> zarejestrowałem <b>#{minutes} minut</b> przerwy, do<b>#{formatted_end_date(@fajrant.ends_at)}</b>"
+      ChbResponseFormatter.new(widget_text: text).call
     when 'finish'
-      text = "<b>#{body[:user][:displayName]}</b> zakończona przerwa"
+      user = UserMatcher.new(email: body[:user][:email], name: body[:user][:displayName], google_user_id: body[:user][:name]).call
+      FajrantHandler.new(user: user).call
       # usuwamy przerwe z bazy
+      text = "<b>#{body[:user][:displayName]}</b> zakończona przerwa"
       ChbResponseFormatter.new(widget_text: text).call
     when 'inc'
       text = 'Za ile wracasz?'
+      buttons = [
+        { text: '10min', action_method_name: 'brb', parameters: { key: 'amount', value: '10min' } },
+        { text: '20min', action_method_name: 'brb', parameters: { key: 'amount', value: '20min' } },
+        { text: '30min', action_method_name: 'brb', parameters: { key: 'amount', value: '30min' } }
+      ]
+      ChbResponseFormatter.new(widget_text: text, buttons: buttons).call
+    else
+      text = "<b>#{body[:user][:displayName]}</b> wygląda na to, że nie zgłosiłeś/aś dotychczas przerwy. "\
+             "Jeśli zgłosić, wybierz jedną z poniższych opcji:"
       buttons = [
         { text: '10min', action_method_name: 'brb', parameters: { key: 'amount', value: '10min' }},
         { text: '20min', action_method_name: 'brb', parameters: { key: 'amount', value: '20min' }},
         { text: '30min', action_method_name: 'brb', parameters: { key: 'amount', value: '30min' }}
       ]
       ChbResponseFormatter.new(widget_text: text, buttons: buttons).call
-    # when condition
-
     end
   end
 end
